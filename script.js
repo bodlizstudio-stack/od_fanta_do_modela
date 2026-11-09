@@ -5,8 +5,7 @@
      1. STRIPE CHECKOUT KONFIGURACIJA IN NAKUPNI TOK
      ========================================================================== */
   // STRIPE PAYMENT LINK:
-  // Nastavljena je delujoča povezava do varne blagajne Stripe za "Od Fanta do Modela" (19,99 €).
-  // Če imaš svoj nov produkcijski Stripe link, ga preprosto zamenjaj tukaj:
+  // Nastavljena je delujoča povezava do varne blagajne Stripe za "Od Fanta do Modela" (24,99 € oz. 21,24 € s kodo GLOW-UP15).
   var PAY_URL = "https://buy.stripe.com/test_00waEYduB8Xx2X28UE8bS00";
 
   var buyDialog = document.getElementById("buy");
@@ -16,6 +15,56 @@
   var closeBuyBtn = document.getElementById("bx");
   var directStripeBtn = document.getElementById("direct-stripe-btn");
   var paySubmitBtn = document.getElementById("pay-submit-btn");
+
+  var promoInput = document.getElementById("promo-input");
+  var applyPromoBtn = document.getElementById("apply-promo-btn");
+  var promoFeedback = document.getElementById("promo-feedback");
+  var dialogPriceDisplay = document.getElementById("dialog-price-display");
+  var appliedPromoCode = "";
+
+  function applyDiscountCode(code) {
+    var clean = (code || "").trim().toUpperCase();
+    if (clean === "GLOW-UP15" || clean === "GLOWUP15") {
+      appliedPromoCode = "GLOW-UP15";
+      if (promoFeedback) {
+        promoFeedback.className = "promo-feedback success";
+        promoFeedback.innerHTML = "✓ Koda <strong>GLOW-UP15</strong> uveljavljena! -15 % popust (prihranek 3,75&nbsp;€)";
+      }
+      if (dialogPriceDisplay) {
+        dialogPriceDisplay.innerHTML = "<del style=\"opacity:0.6;font-size:0.85em;margin-right:6px;\">24,99&nbsp;€</del> <span style=\"color:var(--green);font-weight:800;\">21,24&nbsp;€</span> <small>enkratno plačilo</small>";
+      }
+      if (paySubmitBtn) {
+        paySubmitBtn.innerHTML = "<span>Nadaljuj na varno plačilo (21,24&nbsp;€)</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>";
+      }
+      return true;
+    } else if (clean.length > 0) {
+      appliedPromoCode = "";
+      if (promoFeedback) {
+        promoFeedback.className = "promo-feedback error";
+        promoFeedback.textContent = "Koda ni veljavna. Vpiši GLOW-UP15 za 15 % popust.";
+      }
+      if (dialogPriceDisplay) {
+        dialogPriceDisplay.innerHTML = "24,99&nbsp;€ <small>enkratno plačilo</small>";
+      }
+      if (paySubmitBtn) {
+        paySubmitBtn.innerHTML = "<span>Nadaljuj na varno plačilo (24,99&nbsp;€)</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>";
+      }
+      return false;
+    }
+    return false;
+  }
+
+  if (applyPromoBtn && promoInput) {
+    applyPromoBtn.addEventListener("click", function () {
+      applyDiscountCode(promoInput.value);
+    });
+    promoInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        applyDiscountCode(promoInput.value);
+      }
+    });
+  }
 
   if (directStripeBtn && PAY_URL) {
     directStripeBtn.href = PAY_URL;
@@ -28,9 +77,20 @@
 
     statusMsg.textContent = "";
     statusMsg.className = "msg";
-    if (paySubmitBtn) {
-      paySubmitBtn.disabled = false;
-      paySubmitBtn.innerHTML = "<span>Nadaljuj na varno plačilo (19,99&nbsp;€)</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>";
+
+    if (!appliedPromoCode) {
+      if (paySubmitBtn) {
+        paySubmitBtn.disabled = false;
+        paySubmitBtn.innerHTML = "<span>Nadaljuj na varno plačilo (24,99&nbsp;€)</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>";
+      }
+      if (dialogPriceDisplay) {
+        dialogPriceDisplay.innerHTML = "24,99&nbsp;€ <small>enkratno plačilo</small>";
+      }
+    } else {
+      if (paySubmitBtn) {
+        paySubmitBtn.disabled = false;
+        paySubmitBtn.innerHTML = "<span>Nadaljuj na varno plačilo (21,24&nbsp;€)</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>";
+      }
     }
 
     if (typeof buyDialog.showModal === "function") {
@@ -94,6 +154,10 @@
 
       var separator = PAY_URL.indexOf("?") > -1 ? "&" : "?";
       var checkoutUrl = PAY_URL + separator + "prefilled_email=" + encodeURIComponent(emailValue);
+
+      if (appliedPromoCode) {
+        checkoutUrl += "&prefilled_promo_code=" + encodeURIComponent(appliedPromoCode);
+      }
 
       if (paySubmitBtn) {
         paySubmitBtn.disabled = true;
@@ -251,7 +315,7 @@
       title: "Splošni pogoji nakupa",
       html:
         "<p><strong>1. Ponudnik in predmet prodaje:</strong> Predmet prodaje je digitalni vodič »Od Fanta do Modela« v obliki PDF e-knjige (94 strani). Pred javno objavo strani tukaj vnesi polne podatke izdajatelja/podjetja (Naziv, naslov, matična in davčna številka, kontaktni e-naslov).</p>" +
-        "<p><strong>2. Cena in plačilo:</strong> Cena digitalnega programa znaša 19,99 € in predstavlja enkratno plačilo brez naročnine. Plačilo se izvede prek varnega plačilnega sistema Stripe.</p>" +
+        "<p><strong>2. Cena in plačilo:</strong> Redna cena digitalnega programa znaša 24,99 € (ob uporabi promocijske kode GLOW-UP15 se obračuna 15 % popust na 21,24 €) in predstavlja enkratno plačilo brez naročnine. Plačilo se izvede prek varnega plačilnega sistema Stripe.</p>" +
         "<p><strong>3. Dostava digitalne vsebine:</strong> Po uspešno zaključenem plačilu kupec prejme dostop do digitalne e-knjige v PDF formatu na posredovani e-naslov.</p>" +
         "<p><strong>4. Pravica do odstopa pri digitalni vsebini:</strong> V skladu z Zakonom o varstvu potrošnikov (ZVPot-1) kupec pri nakupu digitalne vsebine, ki se ne dobavi naotipljivem nosilcu podatkov, po začetku prenosa/dostopa nima pravice do odstopa od pogodbe, če je predhodno podal izrecno soglasje za takojšnjo dobavo.</p>" +
         "<p><strong>5. Avtorske pravice:</strong> E-knjiga je namenjena izključno osebni uporabi kupca. Kopiranje, deljenje ali nadaljnja prodaja datoteke tretjim osebam ni dovoljena.</p>"
