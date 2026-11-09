@@ -461,7 +461,7 @@ h1, h2, h3, h4 {
 /* Editorial Visual Composition */
 .editorial-composition {
   position: relative;
-  min-height: 580px;
+  min-height: 560px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -471,6 +471,8 @@ h1, h2, h3, h4 {
   position: relative;
   background: var(--bg-alt);
   border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .comp-frame img {
@@ -484,24 +486,31 @@ h1, h2, h3, h4 {
   position: absolute;
   bottom: 12px;
   right: 12px;
-  background: rgba(9, 11, 9, 0.85);
+  background: rgba(9, 11, 9, 0.88);
   padding: 4px 10px;
   font-size: 0.7rem;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-body);
+  color: var(--text);
   border: 1px solid var(--line);
+  backdrop-filter: blur(4px);
+  border-radius: 3px;
+  z-index: 5;
 }
 
 .comp-before {
   position: absolute;
-  top: 0;
-  left: 4%;
-  width: 44%;
+  top: 24px;
+  left: 0;
+  width: 48%;
   aspect-ratio: 3 / 4;
-  filter: grayscale(1) contrast(0.95);
-  opacity: 0.55;
+  filter: brightness(1.02) contrast(1.05);
+  opacity: 0.94;
   z-index: 1;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.7);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .comp-before figcaption {
@@ -509,23 +518,36 @@ h1, h2, h3, h4 {
   left: 10px;
   top: 10px;
   bottom: auto;
+  border-left: 2px solid #8E968E;
+}
+
+.comp-before:hover {
+  opacity: 1;
+  transform: translateY(-3px);
 }
 
 .comp-after {
-  width: 68%;
+  width: 60%;
   aspect-ratio: 3 / 4;
   z-index: 2;
-  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.comp-after figcaption {
+  border-left: 2px solid var(--green);
 }
 
 .comp-book {
   position: absolute;
-  left: 0;
-  bottom: -12px;
-  width: 43%;
-  z-index: 3;
-  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  left: 18%;
+  bottom: -16px;
+  width: 38%;
+  z-index: 4;
+  box-shadow: 0 28px 65px rgba(0, 0, 0, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+  overflow: hidden;
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -1280,18 +1302,26 @@ h1, h2, h3, h4 {
 .offer-price-line {
   display: flex;
   align-items: baseline;
-  gap: 18px;
-  padding-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  padding-bottom: 24px;
   border-bottom: 1px solid var(--line);
   margin-bottom: 24px;
 }
 
 .offer-price {
   font-family: var(--font-display);
-  font-size: 2.8rem;
+  font-size: clamp(2.3rem, 6vw, 2.8rem);
   font-weight: 800;
   line-height: 1;
   color: var(--text);
+  white-space: nowrap !important;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.price-nobr {
+  white-space: nowrap !important;
 }
 
 .offer-terms {
@@ -1850,13 +1880,70 @@ dialog input[type="email"]:focus {
     gap: 20px;
   }
   .editorial-composition {
-    min-height: 390px;
+    min-height: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    align-items: end;
+    padding-bottom: 56px;
+    margin-top: 14px;
+    position: relative;
+  }
+  .comp-before {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    opacity: 0.96;
+    filter: brightness(1.02) contrast(1.04);
+    z-index: 1;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  }
+  .comp-before figcaption {
+    top: auto;
+    bottom: 8px;
+    left: 8px;
+    font-size: 0.62rem;
+    padding: 3px 7px;
   }
   .comp-after {
-    width: 74%;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    z-index: 2;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75);
+  }
+  .comp-after figcaption {
+    bottom: 8px;
+    right: 8px;
+    font-size: 0.62rem;
+    padding: 3px 7px;
   }
   .comp-book {
-    width: 48%;
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 46%;
+    max-width: 180px;
+    z-index: 4;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.95);
+  }
+  .offer-price-line {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .offer-price {
+    font-size: 2.8rem;
+    white-space: nowrap !important;
   }
   .section-split,
   .section-pillars,

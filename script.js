@@ -30,7 +30,7 @@
     statusMsg.className = "msg";
     if (paySubmitBtn) {
       paySubmitBtn.disabled = false;
-      paySubmitBtn.innerHTML = "<span>Nadaljuj na varno plačilo (19,99 €)</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>";
+      paySubmitBtn.innerHTML = "<span>Nadaljuj na varno plačilo (19,99&nbsp;€)</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>";
     }
 
     if (typeof buyDialog.showModal === "function") {
