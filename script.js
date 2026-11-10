@@ -4,16 +4,11 @@
   /* ==========================================================================
      1. STRIPE CHECKOUT KONFIGURACIJA IN NAKUPNI TOK
      ========================================================================== */
-  // STRIPE PAYMENT LINK:
-  // Nastavljena je delujoča povezava do varne blagajne Stripe za "Od Fanta do Modela" (24,99 € oz. 21,24 € s kodo GLOW-UP15).
-  var PAY_URL = "https://buy.stripe.com/test_8x2dR85g5eR72RhaBx6g800";
-
   var buyDialog = document.getElementById("buy");
   var buyForm = document.getElementById("bf");
   var emailInput = document.getElementById("em");
   var statusMsg = document.getElementById("bm");
   var closeBuyBtn = document.getElementById("bx");
-  var directStripeBtn = document.getElementById("direct-stripe-btn");
   var paySubmitBtn = document.getElementById("pay-submit-btn");
 
   var promoInput = document.getElementById("promo-input");
@@ -28,7 +23,7 @@
       appliedPromoCode = "GLOW-UP15";
       if (promoFeedback) {
         promoFeedback.className = "promo-feedback success";
-        promoFeedback.innerHTML = "✓ Koda <strong>GLOW-UP15</strong> uveljavljena! -15 % popust (prihranek 3,75&nbsp;€)";
+        promoFeedback.innerHTML = "✓ Koda uveljavljena! -15 % popust (prihranek 3,75&nbsp;€)";
       }
       if (dialogPriceDisplay) {
         dialogPriceDisplay.innerHTML = "<del style=\"opacity:0.6;font-size:0.85em;margin-right:6px;\">24,99&nbsp;€</del> <span style=\"color:var(--green);font-weight:800;\">21,24&nbsp;€</span> <small>enkratno plačilo</small>";
@@ -41,7 +36,7 @@
       appliedPromoCode = "";
       if (promoFeedback) {
         promoFeedback.className = "promo-feedback error";
-        promoFeedback.textContent = "Koda ni veljavna. Vpiši GLOW-UP15 za 15 % popust.";
+        promoFeedback.textContent = "Vnesena koda za popust ni veljavna.";
       }
       if (dialogPriceDisplay) {
         dialogPriceDisplay.innerHTML = "24,99&nbsp;€ <small>enkratno plačilo</small>";
@@ -64,10 +59,6 @@
         applyDiscountCode(promoInput.value);
       }
     });
-  }
-
-  if (directStripeBtn && PAY_URL) {
-    directStripeBtn.href = PAY_URL;
   }
 
   function openCheckoutModal(e) {
@@ -146,31 +137,72 @@
         return;
       }
 
-      if (!PAY_URL) {
-        statusMsg.className = "msg";
-        statusMsg.textContent = "Povezava do blagajne se pripravlja.";
-        return;
-      }
-
-      var separator = PAY_URL.indexOf("?") > -1 ? "&" : "?";
-      var checkoutUrl = PAY_URL + separator + "prefilled_email=" + encodeURIComponent(emailValue);
-
-      if (appliedPromoCode) {
-        checkoutUrl += "&prefilled_promo_code=" + encodeURIComponent(appliedPromoCode);
-      }
+      var promoValue = promoInput ? promoInput.value.trim() : "";
+      var codeToSend = appliedPromoCode || promoValue || "";
 
       if (paySubmitBtn) {
         paySubmitBtn.disabled = true;
-        paySubmitBtn.innerHTML = "<span>Preusmerjam na Stripe &hellip;</span>";
+        paySubmitBtn.innerHTML = "<span>Pripravljam varno blagajno &hellip;</span>";
       }
 
       statusMsg.className = "msg";
-      statusMsg.innerHTML = "Preusmerjam na varno blagajno Stripe &hellip;<br><a href=\"" + checkoutUrl + "\" style=\"color:var(--green);text-decoration:underline;display:inline-block;margin-top:8px;font-size:0.86rem;\">Če se stran ne naloži samodejno v nekaj sekundah, klikni tukaj &rarr;</a>";
+      statusMsg.textContent = "Povezujem se z varno blagajno Stripe ...";
 
-      // Zanesljiva preusmeritev brez blokiranja pojavnih oken (podprto na iOS, Android in desktop)
-      setTimeout(function () {
-        window.location.href = checkoutUrl;
-      }, 350);
+      fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: emailValue,
+          promoCode: codeToSend,
+        }),
+      })
+        .then(function (res) {
+          return res.json().then(function (data) {
+            return { ok: res.ok, data: data };
+          });
+        })
+        .then(function (result) {
+          if (result.ok && result.data && result.data.url) {
+            statusMsg.className = "msg";
+            statusMsg.innerHTML =
+              "Preusmerjam na varno blagajno Stripe &hellip;<br><a href=\"" +
+              result.data.url +
+              "\" style=\"color:var(--green);text-decoration:underline;display:inline-block;margin-top:8px;font-size:0.86rem;\">Če se stran ne naloži samodejno, klikni tukaj &rarr;</a>";
+
+            // Redirect to Stripe Hosted Checkout
+            window.location.href = result.data.url;
+          } else {
+            var errorText =
+              result.data && result.data.error
+                ? result.data.error
+                : "Prišlo je do napake pri vzpostavljanju povezave z blagajno. Poskusite ponovno.";
+            statusMsg.className = "msg err";
+            statusMsg.textContent = errorText;
+
+            if (paySubmitBtn) {
+              paySubmitBtn.disabled = false;
+              paySubmitBtn.innerHTML =
+                appliedPromoCode
+                  ? "<span>Nadaljuj na varno plačilo (21,24&nbsp;€)</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>"
+                  : "<span>Nadaljuj na varno plačilo (24,99&nbsp;€)</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>";
+            }
+          }
+        })
+        .catch(function (err) {
+          statusMsg.className = "msg err";
+          statusMsg.textContent =
+            "Napaka pri povezavi. Prosimo preverite internetno povezavo in poskusite znova.";
+
+          if (paySubmitBtn) {
+            paySubmitBtn.disabled = false;
+            paySubmitBtn.innerHTML =
+              appliedPromoCode
+                ? "<span>Nadaljuj na varno plačilo (21,24&nbsp;€)</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>"
+                : "<span>Nadaljuj na varno plačilo (24,99&nbsp;€)</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>";
+          }
+        });
     });
   }
 
@@ -315,7 +347,7 @@
       title: "Splošni pogoji nakupa",
       html:
         "<p><strong>1. Ponudnik in predmet prodaje:</strong> Predmet prodaje je digitalni vodič »Od Fanta do Modela« v obliki PDF e-knjige (94 strani). Pred javno objavo strani tukaj vnesi polne podatke izdajatelja/podjetja (Naziv, naslov, matična in davčna številka, kontaktni e-naslov).</p>" +
-        "<p><strong>2. Cena in plačilo:</strong> Redna cena digitalnega programa znaša 24,99 € (ob uporabi promocijske kode GLOW-UP15 se obračuna 15 % popust na 21,24 €) in predstavlja enkratno plačilo brez naročnine. Plačilo se izvede prek varnega plačilnega sistema Stripe.</p>" +
+        "<p><strong>2. Cena in plačilo:</strong> Redna cena digitalnega programa znaša 24,99 € (ob veljavni promocijski kodi se obračuna popust) in predstavlja enkratno plačilo brez naročnine. Plačilo se izvede prek varnega plačilnega sistema Stripe.</p>" +
         "<p><strong>3. Dostava digitalne vsebine:</strong> Po uspešno zaključenem plačilu kupec prejme dostop do digitalne e-knjige v PDF formatu na posredovani e-naslov.</p>" +
         "<p><strong>4. Pravica do odstopa pri digitalni vsebini:</strong> V skladu z Zakonom o varstvu potrošnikov (ZVPot-1) kupec pri nakupu digitalne vsebine, ki se ne dobavi naotipljivem nosilcu podatkov, po začetku prenosa/dostopa nima pravice do odstopa od pogodbe, če je predhodno podal izrecno soglasje za takojšnjo dobavo.</p>" +
         "<p><strong>5. Avtorske pravice:</strong> E-knjiga je namenjena izključno osebni uporabi kupca. Kopiranje, deljenje ali nadaljnja prodaja datoteke tretjim osebam ni dovoljena.</p>"

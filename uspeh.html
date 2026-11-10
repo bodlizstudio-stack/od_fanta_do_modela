@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plačilo uspešno — Od Fanta do Modela</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- Fonts: Cinzel, Playfair Display, Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap">
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .success-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg, #090a09);
+      color: var(--text, #E8ECE6);
+    }
+    .success-nav {
+      padding: 24px 20px;
+      border-bottom: 1px solid var(--line, rgba(255, 255, 255, 0.08));
+      text-align: center;
+    }
+    .success-brand {
+      font-family: var(--font-display, 'Cinzel', serif);
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      color: #fff;
+    }
+    .success-brand span {
+      background: linear-gradient(135deg, #d4af37, #f3e5ab 50%, #aa7c11);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .success-main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+    }
+    .success-card {
+      max-width: 640px;
+      width: 100%;
+      background: #111411;
+      border: 1px solid rgba(101, 236, 69, 0.25);
+      border-radius: 12px;
+      padding: 40px 32px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(101, 236, 69, 0.05);
+      text-align: center;
+    }
+    @media (max-width: 540px) {
+      .success-card {
+        padding: 30px 20px;
+      }
+    }
+    .success-icon-wrap {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 24px;
+      border-radius: 50%;
+      background: rgba(101, 236, 69, 0.12);
+      border: 2px solid var(--green, #65EC45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      color: var(--green, #65EC45);
+      box-shadow: 0 0 25px rgba(101, 236, 69, 0.25);
+    }
+    .success-title {
+      font-family: var(--font-accent, 'Playfair Display', serif);
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 12px;
+      line-height: 1.2;
+    }
+    .success-lead {
+      color: var(--text-muted, #8E988A);
+      font-size: 1rem;
+      line-height: 1.5;
+      margin: 0 0 28px;
+    }
+    .order-summary-box {
+      background: #0d0f0d;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.92rem;
+    }
+    .summary-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .summary-label {
+      color: var(--text-muted, #8E988A);
+    }
+    .summary-val {
+      font-weight: 600;
+      color: #fff;
+      text-align: right;
+    }
+    .summary-val.highlight {
+      color: var(--green, #65EC45);
+    }
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      background: var(--green, #65EC45);
+      color: #050805;
+      font-family: var(--font-display, 'Cinzel', serif);
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: 0.04em;
+      padding: 16px 28px;
+      border-radius: 6px;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(101, 236, 69, 0.35);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .download-btn:hover {
+      background: #50d832;
+      box-shadow: 0 6px 26px rgba(101, 236, 69, 0.5);
+      transform: translateY(-1px);
+    }
+    .instructions-box {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: left;
+      font-size: 0.88rem;
+      color: var(--text-muted, #8E988A);
+      line-height: 1.6;
+    }
+    .instructions-box h4 {
+      color: #fff;
+      margin: 0 0 10px;
+      font-size: 0.95rem;
+      font-family: var(--font-display, 'Cinzel', serif);
+    }
+    .instructions-box ul {
+      padding-left: 20px;
+      margin: 0;
+    }
+    .instructions-box li {
+      margin-bottom: 6px;
+    }
+    .loading-spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(101, 236, 69, 0.2);
+      border-radius: 50%;
+      border-top-color: var(--green, #65EC45);
+      animation: spin 0.8s linear infinite;
+      margin: 20px auto;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body class="success-page">
+  <header class="success-nav">
+    <a href="/" class="success-brand">
+      OD FANTA <span>DO MODELA</span>
+    </a>
+  </header>
+
+  <main class="success-main">
+    <div class="success-card" id="card-content">
+      <div class="loading-spinner" id="spinner"></div>
+      <p style="color:var(--text-muted);">Preverjam potrditev plačila pri Stripe ...</p>
+    </div>
+  </main>
+
+  <footer class="site-footer" style="padding:24px 0;text-align:center;border-top:1px solid rgba(255,255,255,0.06);">
+    <div class="container">
+      <p style="color:var(--text-muted);font-size:0.85rem;margin:0;">
+        &copy; 2026 Od Fanta do Modela • Vprašanja ali pomoč: <a href="mailto:info@odfantadomodela.si" style="color:var(--green);text-decoration:none;">info@odfantadomodela.si</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    (async function () {
+      const card = document.getElementById('card-content');
+      const params = new URLSearchParams(window.location.search);
+      const sessionId = params.get('session_id');
+
+      if (!sessionId) {
+        card.innerHTML = `
+          <div class="success-icon-wrap" style="border-color:#ff5555;color:#ff5555;background:rgba(255,85,85,0.1);">✕</div>
+          <h1 class="success-title">Manjka številka seje</h1>
+          <p class="success-lead">Za prenos digitalnega vodnika je potreben veljaven identifikator nakupa.</p>
+          <a class="download-btn" href="/" style="background:#222;color:#fff;">Nazaj na domačo stran</a>
+        `;
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/verify-session?session_id=' + encodeURIComponent(sessionId));
+        const data = await res.json();
+
+        if (res.ok && data.status === 'paid' && data.downloadUrl) {
+          card.innerHTML = `
+            <div class="success-icon-wrap">✓</div>
+            <h1 class="success-title">Hvala za tvoj nakup!</h1>
+            <p class="success-lead">Plačilo je bilo uspešno potrjeno. Tvoj digitalni vodnik je pripravljen za takojšen prenos.</p>
+
+            <div class="order-summary-box">
+              <div class="summary-row">
+                <span class="summary-label">Produkt:</span>
+                <span class="summary-val">Od Fanta do Modela (94 strani PDF)</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Znesek:</span>
+                <span class="summary-val highlight">${data.amountTotal || '24,99 €'}</span>
+              </div>
+              ${data.customerEmail ? `
+              <div class="summary-row">
+                <span class="summary-label">E-naslov:</span>
+                <span class="summary-val">${data.customerEmail}</span>
+              </div>` : ''}
+              <div class="summary-row">
+                <span class="summary-label">Status:</span>
+                <span class="summary-val highlight">Potrjeno • Takojšen dostop</span>
+              </div>
+            </div>
+
+            <a class="download-btn" href="${data.downloadUrl}" download="Od-Fanta-do-Modela-Vodnik.pdf">
+              <span>📥 Prenesi digitalni vodnik (PDF)</span>
+            </a>
+
+            <div class="instructions-box">
+              <h4>Kako shraniti in brati e-knjigo:</h4>
+              <ul>
+                <li><strong>Na telefonu (iPhone / Android):</strong> Klikni zgornji gumb, da se PDF odpre. Nato ga shrani v aplikacijo <em>Datoteke (Files)</em>, <em>Knjige (Apple Books)</em> ali <em>Google Drive</em>.</li>
+                <li><strong>Na računalniku:</strong> Datoteka se samodejno shrani v tvojo mapo s prenosi.</li>
+                <li>Povezava je varna in namenjena tvoji osebni uporabi.</li>
+              </ul>
+            </div>
+          `;
+        } else if (data.status === 'pending') {
+          card.innerHTML = `
+            <div class="loading-spinner"></div>
+            <h1 class="success-title">Plačilo je v obdelavi</h1>
+            <p class="success-lead">${data.message || 'Plačilni sistem obdeluje tvoje nakazilo. Ta stran se bo samodejno osvežila čez nekaj sekund.'}</p>
+            <p style="color:var(--text-muted);font-size:0.9rem;">Če si plačal z bančnim nakazilom, lahko potrditev traja nekaj minut.</p>
+          `;
+          setTimeout(() => window.location.reload(), 4000);
+        } else {
+          throw new Error(data.error || 'Preverjanje plačila ni uspelo.');
+        }
+      } catch (err) {
+        card.innerHTML = `
+          <div class="success-icon-wrap" style="border-color:#ff5555;color:#ff5555;background:rgba(255,85,85,0.1);">✕</div>
+          <h1 class="success-title">Prišlo je do težave</h1>
+          <p class="success-lead">${err.message || 'Plačila ni bilo mogoče potrditi.'}</p>
+          <p style="color:var(--text-muted);margin-bottom:24px;">Če so bila sredstva z vaše kartice že odtegnjena, brez skrbi — pišite nam na <a href="mailto:info@odfantadomodela.si" style="color:var(--green);">info@odfantadomodela.si</a> in vam vodnik pošljemo takoj.</p>
+          <a class="download-btn" href="/" style="background:#222;color:#fff;">Nazaj na domačo stran</a>
+        `;
+      }
+    })();
+  </script>
+</body>
+</html>

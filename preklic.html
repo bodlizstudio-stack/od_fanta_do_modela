@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naročilo preklicano — Od Fanta do Modela</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- Fonts: Cinzel, Playfair Display, Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap">
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .cancel-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg, #090a09);
+      color: var(--text, #E8ECE6);
+    }
+    .cancel-nav {
+      padding: 24px 20px;
+      border-bottom: 1px solid var(--line, rgba(255, 255, 255, 0.08));
+      text-align: center;
+    }
+    .cancel-brand {
+      font-family: var(--font-display, 'Cinzel', serif);
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      color: #fff;
+    }
+    .cancel-brand span {
+      background: linear-gradient(135deg, #d4af37, #f3e5ab 50%, #aa7c11);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .cancel-main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+    }
+    .cancel-card {
+      max-width: 560px;
+      width: 100%;
+      background: #111411;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 40px 32px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+    @media (max-width: 540px) {
+      .cancel-card {
+        padding: 30px 20px;
+      }
+    }
+    .cancel-icon-wrap {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 24px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: var(--text-muted, #8E988A);
+    }
+    .cancel-title {
+      font-family: var(--font-accent, 'Playfair Display', serif);
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 12px;
+      line-height: 1.2;
+    }
+    .cancel-lead {
+      color: var(--text-muted, #8E988A);
+      font-size: 1rem;
+      line-height: 1.5;
+      margin: 0 0 28px;
+    }
+    .cancel-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      background: var(--green, #65EC45);
+      color: #050805;
+      font-family: var(--font-display, 'Cinzel', serif);
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: 0.04em;
+      padding: 16px 28px;
+      border-radius: 6px;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(101, 236, 69, 0.25);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .cancel-btn:hover {
+      background: #50d832;
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body class="cancel-page">
+  <header class="cancel-nav">
+    <a href="/" class="cancel-brand">
+      OD FANTA <span>DO MODELA</span>
+    </a>
+  </header>
+
+  <main class="cancel-main">
+    <div class="cancel-card">
+      <div class="cancel-icon-wrap">↺</div>
+      <h1 class="cancel-title">Naročilo ni bilo zaključeno</h1>
+      <p class="cancel-lead">
+        Postopek nakupa je bil prekinjen ali preklican. Z vašega plačilnega računa ni bilo odvzetih nobenih sredstev.
+      </p>
+      <p style="color:var(--text-muted);font-size:0.92rem;margin-bottom:28px;">
+        Če ste imeli težave pri vnosu podatkov ali imate kakršnokoli vprašanje pred nakupom, nam pišite na <a href="mailto:info@odfantadomodela.si" style="color:var(--green);text-decoration:none;">info@odfantadomodela.si</a>.
+      </p>
+      <a class="cancel-btn" href="/">
+        <span>&larr; Vrnite se na predstavitev vodnika</span>
+      </a>
+    </div>
+  </main>
+
+  <footer class="site-footer" style="padding:24px 0;text-align:center;border-top:1px solid rgba(255,255,255,0.06);">
+    <div class="container">
+      <p style="color:var(--text-muted);font-size:0.85rem;margin:0;">
+        &copy; 2026 Od Fanta do Modela • Vse pravice pridržane.
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

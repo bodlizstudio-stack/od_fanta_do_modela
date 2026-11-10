@@ -1,3 +1,18 @@
 {
-  "framework": null
+  "cleanUrls": true,
+  "functions": {
+    "api/download.js": {
+      "includeFiles": "private/**"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/stripe/webhook",
+      "destination": "/api/webhook"
+    },
+    {
+      "source": "/private/(.*)",
+      "destination": "/404"
+    }
+  ]
 }

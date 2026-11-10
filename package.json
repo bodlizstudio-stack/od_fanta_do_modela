@@ -1,0 +1,17 @@
+{
+  "name": "od-fanta-do-modela",
+  "version": "1.0.0",
+  "description": "Od Fanta do Modela — Digitalni vodnik",
+  "main": "server.js",
+  "scripts": {
+    "test": "node -c api/create-checkout-session.js && node -c api/webhook.js && node -c api/verify-session.js && node -c api/download.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bodlizstudio-stack/od_fanta_do_modela.git"
+  },
+  "dependencies": {
+    "stripe": "^23.1.0"
+  }
+}
