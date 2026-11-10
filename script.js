@@ -6,7 +6,7 @@
      ========================================================================== */
   // STRIPE PAYMENT LINK:
   // Nastavljena je delujoča povezava do varne blagajne Stripe za "Od Fanta do Modela" (24,99 € oz. 21,24 € s kodo GLOW-UP15).
-  var PAY_URL = "https://buy.stripe.com/test_aFabJ10tuc7ceUm8yW0ZW00";
+  var PAY_URL = "https://buy.stripe.com/test_8x2dR85g5eR72RhaBx6g800";
 
   var buyDialog = document.getElementById("buy");
   var buyForm = document.getElementById("bf");
