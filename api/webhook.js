@@ -1,4 +1,5 @@
 const Stripe = require('stripe');
+const { sendPurchaseEmail } = require('./email');
 
 // Disable automatic body parsing on Vercel so we can verify the raw Stripe signature
 module.exports.config = {
@@ -65,22 +66,40 @@ module.exports = async function handler(req, res) {
 
         // Verify payment status
         if (session.payment_status === 'paid' || session.payment_status === 'no_payment_required') {
-          // Idempotency check: verify if already fulfilled
-          const isAlreadyFulfilled = session.metadata && session.metadata.fulfilled === 'true';
+          // Idempotency check: verify if email was already sent
+          const isEmailAlreadySent = session.metadata && session.metadata.email_sent === 'true';
 
-          if (isAlreadyFulfilled) {
-            console.log(`[Webhook] Seja ${session.id} je že bila izpolnjena (idempotentno preskočeno).`);
+          if (isEmailAlreadySent) {
+            console.log(`[Webhook] Za sejo ${session.id} je bilo e-sporočilo že uspešno poslano (idempotentno preskočeno).`);
           } else {
-            console.log(`[Webhook] Uspešno plačilo za sejo ${session.id}. Izvajam izpolnitev naročila...`);
+            console.log(`[Webhook] Uspešno plačilo za sejo ${session.id}. Pošiljam e-sporočilo z vodnikom...`);
 
-            // Mark session as fulfilled in Stripe persistent metadata
+            // Send transactional email with PDF download link and attachment
+            const emailResult = await sendPurchaseEmail(session);
+
+            // Persist fulfillment and email delivery status in Stripe metadata
+            const updatedMetadata = {
+              ...session.metadata,
+              fulfilled: 'true',
+              fulfilled_at: session.metadata?.fulfilled_at || new Date().toISOString(),
+            };
+
+            if (emailResult.success) {
+              updatedMetadata.email_sent = 'true';
+              updatedMetadata.email_sent_at = new Date().toISOString();
+              if (emailResult.emailId) {
+                updatedMetadata.resend_id = emailResult.emailId;
+              }
+              console.log(`[Webhook] E-pošta uspešno dostavljena kupcu za sejo ${session.id}. Resend ID: ${emailResult.emailId}`);
+            } else {
+              updatedMetadata.email_sent = 'failed';
+              updatedMetadata.email_error = (emailResult.error || 'Neznana napaka pri pošiljanju').slice(0, 400);
+              console.error(`[Webhook] Opozorilo: Pošiljanje e-pošte za sejo ${session.id} ni uspelo: ${emailResult.error}`);
+            }
+
             try {
               await stripe.checkout.sessions.update(session.id, {
-                metadata: {
-                  ...session.metadata,
-                  fulfilled: 'true',
-                  fulfilled_at: new Date().toISOString(),
-                },
+                metadata: updatedMetadata,
               });
             } catch (updateErr) {
               console.warn(`[Webhook] Opozorilo pri posodobitvi metadata seje: ${updateErr.message}`);

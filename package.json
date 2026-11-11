@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Od Fanta do Modela — Digitalni vodnik",
   "scripts": {
-    "test": "node -c api/create-checkout-session.js && node -c api/webhook.js && node -c api/verify-session.js && node -c api/download.js && node -c api/validate-promo.js && node -c api/contact.js",
+    "test": "node -c api/create-checkout-session.js && node -c api/webhook.js && node -c api/verify-session.js && node -c api/download.js && node -c api/validate-promo.js && node -c api/contact.js && node -c api/email.js",
     "start": "node server.js"
   },
   "repository": {
@@ -11,6 +11,7 @@
     "url": "git+https://github.com/bodlizstudio-stack/od_fanta_do_modela.git"
   },
   "dependencies": {
+    "resend": "^6.38.0",
     "stripe": "^23.1.0"
   }
 }
