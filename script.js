@@ -318,19 +318,27 @@
       el.classList.add("in-view");
     });
   } else {
+    var isMobile = window.innerWidth <= 768;
     var revealObserver = new IntersectionObserver(
       function (entries, observer) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
             var delay = parseInt(entry.target.getAttribute("data-delay") || "0", 10);
-            setTimeout(function () {
+            if (delay > 0) {
+              setTimeout(function () {
+                entry.target.classList.add("in-view");
+              }, delay);
+            } else {
               entry.target.classList.add("in-view");
-            }, delay);
+            }
             observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+      {
+        threshold: isMobile ? 0.02 : 0.08,
+        rootMargin: isMobile ? "0px 0px -15px 0px" : "0px 0px -30px 0px"
+      }
     );
 
     revealElements.forEach(function (el) {
@@ -438,6 +446,96 @@
           legalDialog.removeAttribute("open");
         }
       }
+    });
+  }
+
+  /* ==========================================================================
+     7. KONTAKTNI OBRAZEC ZA POMOČ
+     ========================================================================== */
+  var contactForm = document.getElementById("contact-form");
+  var cfSubmitBtn = document.getElementById("cf-submit-btn");
+  var cfStatus = document.getElementById("cf-status");
+
+  if (contactForm) {
+    contactForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var nameEl = document.getElementById("cf-name");
+      var emailEl = document.getElementById("cf-email");
+      var subjectEl = document.getElementById("cf-subject");
+      var messageEl = document.getElementById("cf-message");
+
+      var nameVal = nameEl ? nameEl.value.trim() : "";
+      var emailVal = emailEl ? emailEl.value.trim() : "";
+      var subjectVal = subjectEl ? subjectEl.value.trim() : "";
+      var messageVal = messageEl ? messageEl.value.trim() : "";
+
+      if (!nameVal || nameVal.length < 2) {
+        cfStatus.className = "contact-status-msg err";
+        cfStatus.textContent = "Prosimo, vpišite svoje ime.";
+        if (nameEl) nameEl.focus();
+        return;
+      }
+
+      if (!isValidEmail(emailVal)) {
+        cfStatus.className = "contact-status-msg err";
+        cfStatus.textContent = "Prosimo, vpišite veljaven e-naslov (npr. ime@primer.si).";
+        if (emailEl) emailEl.focus();
+        return;
+      }
+
+      if (!messageVal || messageVal.length < 5) {
+        cfStatus.className = "contact-status-msg err";
+        cfStatus.textContent = "Prosimo, napišite svoje sporočilo ali vprašanje.";
+        if (messageEl) messageEl.focus();
+        return;
+      }
+
+      if (cfSubmitBtn) {
+        cfSubmitBtn.disabled = true;
+        cfSubmitBtn.innerHTML = "<span>Pošiljam sporočilo &hellip;</span>";
+      }
+
+      cfStatus.className = "contact-status-msg";
+      cfStatus.textContent = "Pošiljam sporočilo ...";
+
+      fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: nameVal,
+          email: emailVal,
+          subject: subjectVal,
+          message: messageVal,
+        }),
+      })
+        .then(function (res) {
+          return res.json().then(function (data) {
+            return { ok: res.ok, data: data };
+          });
+        })
+        .then(function (result) {
+          if (cfSubmitBtn) {
+            cfSubmitBtn.disabled = false;
+            cfSubmitBtn.innerHTML = "<span>Pošlji sporočilo</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>";
+          }
+
+          if (result.ok && result.data && result.data.success) {
+            cfStatus.className = "contact-status-msg success";
+            cfStatus.innerHTML = "✓ " + (result.data.message || "Tvoje sporočilo je bilo uspešno poslano! Odgovorili ti bomo v najkrajšem možnem času.");
+            contactForm.reset();
+          } else {
+            cfStatus.className = "contact-status-msg err";
+            cfStatus.textContent = (result.data && result.data.error) ? result.data.error : "Pri pošiljanju je prišlo do napake. Pišite nam neposredno na info@odfantadomodela.si.";
+          }
+        })
+        .catch(function () {
+          if (cfSubmitBtn) {
+            cfSubmitBtn.disabled = false;
+            cfSubmitBtn.innerHTML = "<span>Pošlji sporočilo</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>";
+          }
+          cfStatus.className = "contact-status-msg err";
+          cfStatus.textContent = "Napaka pri povezavi. Prosimo pišite nam na info@odfantadomodela.si.";
+        });
     });
   }
 })();

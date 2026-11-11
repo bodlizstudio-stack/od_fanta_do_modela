@@ -36,6 +36,7 @@ html {
   background: var(--bg);
   color: var(--text);
   -webkit-text-size-adjust: 100%;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -46,6 +47,8 @@ body {
   line-height: 1.65;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 img,
@@ -1899,17 +1902,215 @@ dialog input[type="email"]:focus {
 }
 
 /* ==========================================================================
-   SUBTLE REVEAL
+   09. POMOČ IN KONTAKTNI OBRAZEC
    ========================================================================== */
+.section-contact {
+  padding: 100px 0;
+  background: var(--bg-alt);
+  border-top: 1px solid var(--line);
+  position: relative;
+}
+
+.contact-container {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.contact-header {
+  text-align: center;
+  margin-bottom: 44px;
+}
+
+.contact-header .section-sub {
+  margin: 14px auto 0;
+  max-width: 600px;
+}
+
+.contact-mail-link {
+  color: var(--green);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity 0.2s ease;
+}
+
+.contact-mail-link:hover {
+  opacity: 0.8;
+}
+
+.contact-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  padding: 40px 36px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 640px) {
+  .section-contact {
+    padding: 70px 0;
+  }
+  .contact-card {
+    padding: 26px 18px;
+  }
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contact-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+@media (max-width: 640px) {
+  .contact-form .form-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  text-align: left;
+}
+
+.form-group input,
+.form-group textarea,
+.contact-select {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  padding: 12px 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.contact-select:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(101, 236, 69, 0.15);
+}
+
+.contact-select {
+  cursor: pointer;
+  appearance: auto;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.contact-status-msg {
+  font-size: 0.9rem;
+  text-align: center;
+  min-height: 1.2em;
+  line-height: 1.5;
+}
+
+.contact-status-msg.success {
+  color: var(--green);
+  background: rgba(101, 236, 69, 0.08);
+  border: 1px solid rgba(101, 236, 69, 0.3);
+  padding: 14px 18px;
+  border-radius: 6px;
+}
+
+.contact-status-msg.err {
+  color: #FF8585;
+  background: rgba(255, 133, 133, 0.08);
+  border: 1px solid rgba(255, 133, 133, 0.3);
+  padding: 14px 18px;
+  border-radius: 6px;
+}
+
+.contact-direct-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+@media (max-width: 600px) {
+  .contact-direct-info {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+.info-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--line);
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+.pill-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.info-pill strong {
+  display: block;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.info-pill span,
+.info-pill a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.info-pill a:hover {
+  color: var(--green);
+}
+
+/* ==========================================================================
+   SMOOTH PRECISION SCROLL & REVEAL ANIMATIONS
+   ========================================================================== */
+button, a, input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
 .reveal {
   opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translate3d(0, 22px, 0);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .reveal.in-view {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
+}
+
+@media (max-width: 768px) {
+  .reveal {
+    transform: translate3d(0, 14px, 0);
+    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

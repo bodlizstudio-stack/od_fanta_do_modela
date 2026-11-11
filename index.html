@@ -40,6 +40,7 @@
         <a href="#vsebina">Vpogled v knjigo</a>
         <a href="#potek">Kako deluje</a>
         <a href="#faq">Vprašanja</a>
+        <a href="#kontakt">Pomoč</a>
       </nav>
 
       <div class="header-right">
@@ -64,6 +65,7 @@
           <a href="#potek" data-nav-close>Kako deluje</a>
           <a href="#ponudba" data-nav-close>Ponudba in nakup</a>
           <a href="#faq" data-nav-close>Pogosta vprašanja</a>
+          <a href="#kontakt" data-nav-close>Pomoč in kontakt</a>
         </nav>
         <div class="mobile-menu-footer">
           <a class="btn-primary btn-block" href="#ponudba" data-buy>Pridobi program — 24,99&nbsp;€</a>
@@ -1013,6 +1015,75 @@
         </a>
       </div>
     </section>
+
+    <!-- 09 / POMOČ IN KONTAKT -->
+    <section class="section-contact" id="kontakt">
+      <div class="container contact-container reveal">
+        <div class="contact-header">
+          <span class="section-index">09 — Pomoč &amp; Podpora</span>
+          <h2 class="section-title">
+            Imaš vprašanje ali <span class="accent-word">potrebuješ pomoč?</span>
+          </h2>
+          <p class="section-sub">
+            Z veseljem ti odgovorimo na vprašanja glede vadbe, prehrane ali naročila vodnika. Piši nam prek spodnjega obrazca ali neposredno na <a href="mailto:info@odfantadomodela.si" class="contact-mail-link">info@odfantadomodela.si</a>.
+          </p>
+        </div>
+
+        <div class="contact-card">
+          <form class="contact-form" id="contact-form" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="field-label" for="cf-name">Tvoje ime</label>
+                <input id="cf-name" name="name" type="text" placeholder="npr. Luka Novak" required autocomplete="name">
+              </div>
+              <div class="form-group">
+                <label class="field-label" for="cf-email">Tvoj e-naslov</label>
+                <input id="cf-email" name="email" type="email" placeholder="luka@primer.si" required autocomplete="email">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="field-label" for="cf-subject">Vrsta vprašanja</label>
+              <select id="cf-subject" name="subject" class="contact-select">
+                <option value="Vprašanje pred nakupom">Vprašanje pred nakupom vodnika</option>
+                <option value="Pomoč pri naročilu / prenosu PDF">Pomoč pri naročilu ali prenosu PDF</option>
+                <option value="Vprašanje o programu">Vprašanje o programu (trening, prehrana, nega)</option>
+                <option value="Drugo">Drugo</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="field-label" for="cf-message">Tvoje sporočilo</label>
+              <textarea id="cf-message" name="message" rows="4" placeholder="Napiši svoje vprašanje ali težavo ..." required></textarea>
+            </div>
+
+            <button class="btn-primary btn-block contact-submit-btn" type="submit" id="cf-submit-btn">
+              <span>Pošlji sporočilo</span>
+              <span class="btn-arrow" aria-hidden="true">&rarr;</span>
+            </button>
+
+            <div class="contact-status-msg" id="cf-status" role="status" aria-live="polite"></div>
+          </form>
+
+          <div class="contact-direct-info">
+            <div class="info-pill">
+              <span class="pill-icon">⚡</span>
+              <div>
+                <strong>Hiter odziv</strong>
+                <span>Običajno odgovorimo v nekaj urah</span>
+              </div>
+            </div>
+            <div class="info-pill">
+              <span class="pill-icon">✉️</span>
+              <div>
+                <strong>Direktna podpora</strong>
+                <a href="mailto:info@odfantadomodela.si">info@odfantadomodela.si</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <!-- FOOTER -->
@@ -1031,6 +1102,7 @@
             <a href="#sistem">4 področja</a>
             <a href="#vsebina">Vsebina</a>
             <a href="#ponudba">Nakup (24,99&nbsp;€)</a>
+            <a href="#kontakt">Pomoč in podpora</a>
           </div>
           <div>
             <h4>Informacije</h4>
