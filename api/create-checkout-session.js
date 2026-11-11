@@ -40,11 +40,20 @@ module.exports = async function handler(req, res) {
       }
     }
 
-    // Determine site base URL (Production GlowUp or dynamic fallback)
-    const proto = req.headers['x-forwarded-proto'] || 'https';
-    const host = req.headers['x-forwarded-host'] || req.headers.host;
-    const detectedOrigin = host ? `${proto}://${host}` : 'https://www.glowup-slo.si';
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || detectedOrigin;
+    // Determine safe site base URL (always valid https://)
+    function resolveBaseUrl(r) {
+      const envUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || '';
+      if (typeof envUrl === 'string' && /^https?:\/\//i.test(envUrl.trim())) {
+        return envUrl.trim().replace(/\/+$/, '');
+      }
+      const host = r.headers['x-forwarded-host'] || r.headers.host;
+      if (host && typeof host === 'string') {
+        const proto = r.headers['x-forwarded-proto'] || 'https';
+        return `${proto}://${host}`.replace(/\/+$/, '');
+      }
+      return 'https://www.glowup-slo.si';
+    }
+    const siteUrl = resolveBaseUrl(req);
 
     // Handle secret promotion code
     let promotionCodeObj = null;
@@ -108,16 +117,12 @@ module.exports = async function handler(req, res) {
         managed_payments: { enabled: true },
       });
     } catch (mpErr) {
-      // If managed_payments parameter is not recognized by Stripe version or already account-default
-      if (
-        mpErr.message &&
-        (mpErr.message.includes('managed_payments') ||
-          mpErr.message.includes('unknown parameter') ||
-          mpErr.message.includes('Unrecognized request URL'))
-      ) {
+      // If managed_payments parameter is rejected or already account-default, fallback seamlessly
+      try {
         session = await stripe.checkout.sessions.create(sessionParams);
-      } else {
-        throw mpErr;
+      } catch (fallbackErr) {
+        console.error('Stripe session creation error:', fallbackErr);
+        throw fallbackErr;
       }
     }
 
