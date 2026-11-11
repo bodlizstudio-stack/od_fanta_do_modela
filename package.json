@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Od Fanta do Modela — Digitalni vodnik",
   "scripts": {
-    "build": "echo \"Static build complete\"",
     "test": "node -c api/create-checkout-session.js && node -c api/webhook.js && node -c api/verify-session.js && node -c api/download.js && node -c api/validate-promo.js && node -c api/contact.js",
     "start": "node server.js"
   },
