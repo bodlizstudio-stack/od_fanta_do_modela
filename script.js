@@ -482,6 +482,12 @@
   var contactForm = document.getElementById("contact-form");
   var cfSubmitBtn = document.getElementById("cf-submit-btn");
   var cfStatus = document.getElementById("cf-status");
+  var cfTimestamp = document.getElementById("cf-timestamp");
+  var cfWebsite = document.getElementById("cf-website");
+
+  if (cfTimestamp) {
+    cfTimestamp.value = String(Date.now());
+  }
 
   if (contactForm) {
     contactForm.addEventListener("submit", function (e) {
@@ -495,24 +501,26 @@
       var emailVal = emailEl ? emailEl.value.trim() : "";
       var subjectVal = subjectEl ? subjectEl.value.trim() : "";
       var messageVal = messageEl ? messageEl.value.trim() : "";
+      var hpVal = cfWebsite ? cfWebsite.value.trim() : "";
+      var tsVal = cfTimestamp ? cfTimestamp.value : String(Date.now() - 3000);
 
       if (!nameVal || nameVal.length < 2) {
         cfStatus.className = "contact-status-msg err";
-        cfStatus.textContent = "Prosimo, vpišite svoje ime.";
+        cfStatus.textContent = "Prosimo, vpišite svoje ime (vsaj 2 znaka).";
         if (nameEl) nameEl.focus();
         return;
       }
 
       if (!isValidEmail(emailVal)) {
         cfStatus.className = "contact-status-msg err";
-        cfStatus.textContent = "Prosimo, vpišite veljaven e-naslov (npr. ime@primer.si).";
+        cfStatus.textContent = "Prosimo, vpišite veljaven e-naslov (npr. luka@primer.si).";
         if (emailEl) emailEl.focus();
         return;
       }
 
       if (!messageVal || messageVal.length < 5) {
         cfStatus.className = "contact-status-msg err";
-        cfStatus.textContent = "Prosimo, napišite svoje sporočilo ali vprašanje.";
+        cfStatus.textContent = "Prosimo, napišite svoje sporočilo ali vprašanje (vsaj 5 znakov).";
         if (messageEl) messageEl.focus();
         return;
       }
@@ -533,11 +541,13 @@
           email: emailVal,
           subject: subjectVal,
           message: messageVal,
+          website_url: hpVal,
+          _t: tsVal,
         }),
       })
         .then(function (res) {
           return res.json().then(function (data) {
-            return { ok: res.ok, data: data };
+            return { ok: res.ok, status: res.status, data: data };
           });
         })
         .then(function (result) {
@@ -550,9 +560,12 @@
             cfStatus.className = "contact-status-msg success";
             cfStatus.innerHTML = "✓ " + (result.data.message || "Tvoje sporočilo je bilo uspešno poslano! Odgovorili ti bomo v najkrajšem možnem času.");
             contactForm.reset();
+            if (cfTimestamp) cfTimestamp.value = String(Date.now());
           } else {
             cfStatus.className = "contact-status-msg err";
-            cfStatus.textContent = (result.data && result.data.error) ? result.data.error : "Pri pošiljanju je prišlo do napake. Pišite nam neposredno na bodlizstudio@gmail.com.";
+            cfStatus.textContent = (result.data && result.data.error)
+              ? result.data.error
+              : "Pri pošiljanju je prišlo do napake. Pišite nam neposredno na bodlizstudio@gmail.com.";
           }
         })
         .catch(function () {
