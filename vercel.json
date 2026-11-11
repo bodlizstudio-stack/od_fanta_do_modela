@@ -1,4 +1,5 @@
 {
+  "framework": null,
   "cleanUrls": true,
   "functions": {
     "api/download.js": {
