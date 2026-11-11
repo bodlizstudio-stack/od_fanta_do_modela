@@ -48,7 +48,7 @@ module.exports = async function handler(req, res) {
   } catch (err) {
     console.error('Napaka v kontaktnem obrazcu:', err);
     return res.status(500).json({
-      error: 'Pri pošiljanju sporočila je prišlo do napake. Prosimo poskusite ponovno ali pišite neposredno na info@odfantadomodela.si.',
+      error: 'Pri pošiljanju sporočila je prišlo do napake. Prosimo poskusite ponovno ali pišite neposredno na bodlizstudio@gmail.com.',
     });
   }
 };

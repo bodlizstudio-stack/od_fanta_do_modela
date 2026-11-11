@@ -525,7 +525,7 @@
             contactForm.reset();
           } else {
             cfStatus.className = "contact-status-msg err";
-            cfStatus.textContent = (result.data && result.data.error) ? result.data.error : "Pri pošiljanju je prišlo do napake. Pišite nam neposredno na info@odfantadomodela.si.";
+            cfStatus.textContent = (result.data && result.data.error) ? result.data.error : "Pri pošiljanju je prišlo do napake. Pišite nam neposredno na bodlizstudio@gmail.com.";
           }
         })
         .catch(function () {
@@ -534,7 +534,7 @@
             cfSubmitBtn.innerHTML = "<span>Pošlji sporočilo</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>";
           }
           cfStatus.className = "contact-status-msg err";
-          cfStatus.textContent = "Napaka pri povezavi. Prosimo pišite nam na info@odfantadomodela.si.";
+          cfStatus.textContent = "Napaka pri povezavi. Prosimo pišite nam na bodlizstudio@gmail.com.";
         });
     });
   }
