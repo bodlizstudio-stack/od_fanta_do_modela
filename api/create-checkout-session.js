@@ -83,13 +83,36 @@ module.exports = async function handler(req, res) {
       }
     }
 
+    // Resolve actual Stripe Price ID (supports if user entered Product ID 'prod_...' instead of 'price_...')
+    let priceIdToUse = stripePriceId.trim();
+    if (priceIdToUse.startsWith('prod_')) {
+      try {
+        const product = await stripe.products.retrieve(priceIdToUse);
+        if (product.default_price) {
+          priceIdToUse = typeof product.default_price === 'string' ? product.default_price : product.default_price.id;
+        } else {
+          const prices = await stripe.prices.list({
+            product: priceIdToUse,
+            active: true,
+            limit: 1,
+          });
+          if (prices.data && prices.data.length > 0) {
+            priceIdToUse = prices.data[0].id;
+          }
+        }
+        console.log(`[Stripe Checkout] Pretvornik: Product ID '${stripePriceId}' -> Price ID '${priceIdToUse}'`);
+      } catch (prodErr) {
+        console.error('Napaka pri pridobivanju cene za Product ID:', prodErr.message);
+      }
+    }
+
     // Construct Checkout Session parameters
-    // Strict server-side: quantity is always 1, price comes only from STRIPE_PRICE_ID
+    // Strict server-side: quantity is always 1, price comes only from Stripe price
     const sessionParams = {
       mode: 'payment',
       line_items: [
         {
-          price: stripePriceId,
+          price: priceIdToUse,
           quantity: 1,
         },
       ],
