@@ -14,6 +14,8 @@
   var promoInput = document.getElementById("promo-input");
   var applyPromoBtn = document.getElementById("apply-promo-btn");
   var promoFeedback = document.getElementById("promo-feedback");
+  var promoToggleBtn = document.getElementById("promo-toggle-btn");
+  var promoCollapse = document.getElementById("promo-collapse");
   var dialogPriceDisplay = document.getElementById("dialog-price-display");
   var appliedPromoCode = "";
 
@@ -96,6 +98,21 @@
     });
   }
 
+  if (promoToggleBtn && promoCollapse) {
+    promoToggleBtn.addEventListener("click", function () {
+      var isHidden = promoCollapse.hasAttribute("hidden");
+      if (isHidden) {
+        promoCollapse.removeAttribute("hidden");
+        promoToggleBtn.setAttribute("aria-expanded", "true");
+        promoToggleBtn.style.display = "none";
+        if (promoInput) promoInput.focus();
+      } else {
+        promoCollapse.setAttribute("hidden", "");
+        promoToggleBtn.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+
   function openCheckoutModal(e) {
     if (e) e.preventDefault();
     closeMobileMenu();
@@ -105,6 +122,11 @@
     statusMsg.className = "msg";
 
     if (!appliedPromoCode) {
+      if (promoCollapse && promoToggleBtn) {
+        promoCollapse.setAttribute("hidden", "");
+        promoToggleBtn.style.display = "";
+        promoToggleBtn.setAttribute("aria-expanded", "false");
+      }
       if (paySubmitBtn) {
         paySubmitBtn.disabled = false;
         paySubmitBtn.innerHTML = "<span>Nadaljuj na varno plačilo (24,99&nbsp;€)</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>";
@@ -113,6 +135,11 @@
         dialogPriceDisplay.innerHTML = "24,99&nbsp;€ <small>enkratno plačilo</small>";
       }
     } else {
+      if (promoCollapse && promoToggleBtn) {
+        promoCollapse.removeAttribute("hidden");
+        promoToggleBtn.style.display = "none";
+        promoToggleBtn.setAttribute("aria-expanded", "true");
+      }
       if (paySubmitBtn) {
         paySubmitBtn.disabled = false;
         paySubmitBtn.innerHTML = "<span>Nadaljuj na varno plačilo (21,24&nbsp;€)</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>";

@@ -1377,11 +1377,43 @@ h1, h2, h3, h4 {
 }
 
 .promo-box {
-  margin: 16px 0 18px;
-  padding: 14px 16px;
+  margin: 10px 0 16px;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.promo-toggle-wrap {
+  text-align: left;
+  margin: 4px 0;
+}
+
+.promo-toggle-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 4px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.2s ease;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.promo-toggle-btn:hover {
+  color: var(--green);
+}
+
+.promo-collapse {
+  padding: 12px 14px;
   background: var(--bg-surface);
   border: 1px solid var(--line-strong);
   border-radius: 6px;
+  margin-top: 8px;
 }
 
 .promo-row {

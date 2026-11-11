@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&family=Plus+Jakarta+Sans:ital,wght@0,600;0,700;0,800;1,700;1,800;1,900&family=Syne:wght@700;800;900&display=swap">
 
   <link rel="preload" as="image" href="assets/cover.jpg">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20261111c">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Preskoči na vsebino</a>
@@ -1159,19 +1159,25 @@
         required
       >
 
-      <div class="promo-box">
-        <label class="field-label" for="promo-input">Imaš kodo za popust?</label>
-        <div class="promo-row">
-          <input
-            id="promo-input"
-            type="text"
-            placeholder="Vnesi kodo"
-            autocomplete="off"
-            autocapitalize="characters"
-          >
-          <button class="btn-promo-apply" type="button" id="apply-promo-btn">Uveljavi</button>
+      <div class="promo-box" id="promo-box">
+        <div class="promo-toggle-wrap">
+          <button type="button" class="promo-toggle-btn" id="promo-toggle-btn" aria-expanded="false" aria-controls="promo-collapse">
+            <span>+ Imaš kodo za popust?</span>
+          </button>
         </div>
-        <div class="promo-feedback" id="promo-feedback" role="status" aria-live="polite"></div>
+        <div class="promo-collapse" id="promo-collapse" hidden>
+          <div class="promo-row">
+            <input
+              id="promo-input"
+              type="text"
+              placeholder="Vnesi kodo"
+              autocomplete="off"
+              autocapitalize="characters"
+            >
+            <button class="btn-promo-apply" type="button" id="apply-promo-btn">Uveljavi</button>
+          </div>
+          <div class="promo-feedback" id="promo-feedback" role="status" aria-live="polite"></div>
+        </div>
       </div>
 
       <button class="btn-primary btn-block" type="submit" id="pay-submit-btn">
@@ -1200,6 +1206,6 @@
     </div>
   </dialog>
 
-  <script src="script.js" defer></script>
+  <script src="script.js?v=20261111c" defer></script>
 </body>
 </html>
