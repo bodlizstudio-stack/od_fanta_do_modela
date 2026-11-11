@@ -19,6 +19,14 @@
   ],
   "rewrites": [
     {
+      "source": "/googlefd62928fc13b41b4.html",
+      "destination": "/googlefd62928fc13b41b4.html"
+    },
+    {
+      "source": "/googlefd62928fc13b41b4",
+      "destination": "/googlefd62928fc13b41b4.html"
+    },
+    {
       "source": "/api/stripe/webhook",
       "destination": "/api/webhook"
     },
