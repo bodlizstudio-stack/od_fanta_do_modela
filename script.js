@@ -18,35 +18,70 @@
   var appliedPromoCode = "";
 
   function applyDiscountCode(code) {
-    var clean = (code || "").trim().toUpperCase();
-    if (clean === "GLOW-UP15" || clean === "GLOWUP15") {
-      appliedPromoCode = "GLOW-UP15";
-      if (promoFeedback) {
-        promoFeedback.className = "promo-feedback success";
-        promoFeedback.innerHTML = "✓ Koda uveljavljena! -15 % popust (prihranek 3,75&nbsp;€)";
-      }
-      if (dialogPriceDisplay) {
-        dialogPriceDisplay.innerHTML = "<del style=\"opacity:0.6;font-size:0.85em;margin-right:6px;\">24,99&nbsp;€</del> <span style=\"color:var(--green);font-weight:800;\">21,24&nbsp;€</span> <small>enkratno plačilo</small>";
-      }
-      if (paySubmitBtn) {
-        paySubmitBtn.innerHTML = "<span>Nadaljuj na varno plačilo (21,24&nbsp;€)</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>";
-      }
-      return true;
-    } else if (clean.length > 0) {
-      appliedPromoCode = "";
-      if (promoFeedback) {
-        promoFeedback.className = "promo-feedback error";
-        promoFeedback.textContent = "Vnesena koda za popust ni veljavna.";
-      }
-      if (dialogPriceDisplay) {
-        dialogPriceDisplay.innerHTML = "24,99&nbsp;€ <small>enkratno plačilo</small>";
-      }
-      if (paySubmitBtn) {
-        paySubmitBtn.innerHTML = "<span>Nadaljuj na varno plačilo (24,99&nbsp;€)</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>";
-      }
-      return false;
+    var clean = (code || "").trim();
+    if (!clean) return;
+
+    if (applyPromoBtn) {
+      applyPromoBtn.disabled = true;
+      applyPromoBtn.textContent = "...";
     }
-    return false;
+    if (promoFeedback) {
+      promoFeedback.className = "promo-feedback";
+      promoFeedback.textContent = "Preverjam kodo ...";
+    }
+
+    fetch("/api/validate-promo?code=" + encodeURIComponent(clean))
+      .then(function (res) {
+        return res.json();
+      })
+      .then(function (data) {
+        if (applyPromoBtn) {
+          applyPromoBtn.disabled = false;
+          applyPromoBtn.textContent = "Uveljavi";
+        }
+
+        if (data && data.valid) {
+          appliedPromoCode = data.code;
+          if (promoFeedback) {
+            promoFeedback.className = "promo-feedback success";
+            promoFeedback.innerHTML = "✓ Koda uspešno uveljavljena! (" + (data.discountText || "-15 %") + ")";
+          }
+          if (dialogPriceDisplay) {
+            dialogPriceDisplay.innerHTML =
+              "<del style=\"opacity:0.6;font-size:0.85em;margin-right:6px;\">24,99&nbsp;€</del> <span style=\"color:var(--green);font-weight:800;\">" +
+              (data.finalPrice || "21,24 €") +
+              "</span> <small>enkratno plačilo</small>";
+          }
+          if (paySubmitBtn) {
+            paySubmitBtn.innerHTML =
+              "<span>Nadaljuj na varno plačilo (" +
+              (data.finalPrice || "21,24 €") +
+              ")</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>";
+          }
+        } else {
+          appliedPromoCode = "";
+          if (promoFeedback) {
+            promoFeedback.className = "promo-feedback error";
+            promoFeedback.textContent = (data && data.error) ? data.error : "Vnesena koda za popust ni veljavna.";
+          }
+          if (dialogPriceDisplay) {
+            dialogPriceDisplay.innerHTML = "24,99&nbsp;€ <small>enkratno plačilo</small>";
+          }
+          if (paySubmitBtn) {
+            paySubmitBtn.innerHTML = "<span>Nadaljuj na varno plačilo (24,99&nbsp;€)</span><span class=\"btn-arrow\" aria-hidden=\"true\">&rarr;</span>";
+          }
+        }
+      })
+      .catch(function () {
+        if (applyPromoBtn) {
+          applyPromoBtn.disabled = false;
+          applyPromoBtn.textContent = "Uveljavi";
+        }
+        if (promoFeedback) {
+          promoFeedback.className = "promo-feedback error";
+          promoFeedback.textContent = "Preverjanje kode ni uspelo. Poskusite znova.";
+        }
+      });
   }
 
   if (applyPromoBtn && promoInput) {
